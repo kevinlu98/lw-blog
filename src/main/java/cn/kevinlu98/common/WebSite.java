@@ -38,6 +38,7 @@ public class WebSite {
     private String footer;
     private String logo;
     private String favicon;
+    private boolean debug;
 
 
     public void setCdn(String cdn) {
@@ -46,4 +47,5 @@ public class WebSite {
         }
         this.cdn = cdn;
     }
+
 }
