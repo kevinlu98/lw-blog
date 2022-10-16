@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="header(title,link,style)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" th:content="${@webSite.description}">
+    <meta name="keywords" th:content="${T(java.lang.String).join(',',@webSite.keywords)}">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/static/plugin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugin/font-awesome/css/font-awesome.min.css">
+    <th:block th:replace="${link}"></th:block>
+    <!-- 自定义css文件 -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        #lw-right-bottom-bar {
+            position: fixed;
+            bottom: 50px;
+            font-size: 18px;
+            right: 20px;
+        }
+
+        #lw-right-bottom-bar a {
+            margin-top: 4px;
+            display: block;
+            background-color: rgba(0, 0, 0, .5);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+        }
+
+        #lw-right-bottom-bar #lw-to-top {
+            opacity: 0;
+        }
+    </style>
+    <th:block th:replace="${style}"></th:block>
+</head>
+<body>
+<th:block th:fragment="nav">
+    <nav class="lw-md-show">
+        <div class="lw-container lw-header lw-posr ">
+            <div class="lw-logo lw-fl">
+                <a th:href="@{/}">
+                    <img th:src="${@webSite.logo eq null or @webSite.logo.length() <= 0}?'/static/image/logo.png':${@webSite.logo}"
+                         alt="冷文的个人博客">
+                </a>
+            </div>
+            <span th:text="${@webSite.navdesc}"></span>
+            <div class="lw-fr lw-linkme">
+                <a target="_blank"
+                   th:href="${T(java.lang.String).format('tencent://message/?uin=%s&amp;Site=&amp;menu=yes',@webSite.qq)}"><i
+                        class="fa fa-qq" aria-hidden="true"></i></a>
+                <a target="_blank" th:href="${@webSite.github}"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target="_blank" th:href="${@webSite.sina}"><i class="fa fa-weibo" aria-hidden="true"></i></a>
+                <a target="_blank"
+                   th:href="${'http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email='+@webSite.mail}"><i
+                        class="fa fa-envelope" aria-hidden="true"></i></a>
+            </div>
+            <div class="lw-nav lw-posa">
+                <a th:href="@{/}"><i class="fa fa-home" aria-hidden="true"></i>首页</a>
+                <!--/*@thymesVar id="navigations" type="java.util.List<cn.kevinlu98.pojo.Navigation>"*/-->
+                <a th:each="navigation:${navigations}" th:href="${navigation.link}"
+                   th:target="${navigation.linkMode}?'_blank':''">
+                    <i th:if="${navigation.icon.length()>0}" th:class="${'fa fa-'+navigation.icon}"></i>
+                    <th:block th:text="${navigation.name}"></th:block>
+                </a>
+                <a href="javascript:void(0)" class="lw-fr lw-search-btn" style="padding: 0;">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+
+
+    </nav>
+    <div class="lw-md-hidden lw-phone-header">
+        <a href="javascript:void(0)" class="lw-posa lw-phone-topbtn lw-search-show lw-search-btn"><i
+                class="fa fa-search"></i></a>
+        <a class="lw-index" href="/"><h1>冷文学习者</h1></a>
+    </div>
+    <div class="lw-md-hidden" style="height: 100px;"></div>
+</th:block>
+
+<th:block th:fragment="right">
+    <div class="lw-right-item lw-profile">
+        <div class="lw-avatar-content lw-posr"
+             style="background-image:url(/static/image/5-120601094K3-50.gif);">
+            <div class="lw-avatar lw-posa">
+                <img th:src="${@webSite.avatar}" src="/static/image/avatar.jpeg" alt="">
+            </div>
+        </div>
+        <ul class="lw-info">
+            <li><span>博主</span>
+                <th:block th:text="${@webSite.nickname}"></th:block>
+            </li>
+            <li><span>坐标</span>
+                <th:block th:text="${@webSite.address}"></th:block>
+            </li>
+            <li><span>标签</span>
+                <th:block th:text="${T(java.lang.String).join('、',@webSite.tags)}"></th:block>
+            </li>
+        </ul>
+    </div>
+    <div class="lw-right-item lw-right-hot">
+        <h4><i class="fa fa-fire lw-mr5" aria-hidden="true"></i>热门文章</h4>
+        <ul class="lw-hot-list">
+            <!--/*@thymesVar id="hots" type="java.util.List<cn.kevinlu98.pojo.Article>"*/-->
+            <li th:each="hot,it:${hots}">
+                <a th:href="@{/{id}.html(id=${hot.id})}">
+                    <div class="lw-hot-img">
+                        <span class="label label-danger lw-posa" th:if="${it.index eq 0}">1</span>
+                        <span class="label label-warning lw-posa" th:if="${it.index eq 1}">2</span>
+                        <span class="label label-info lw-posa" th:if="${it.index eq 2}">3</span>
+                        <span class="label label-default lw-posa" th:if="${it.index > 2}"
+                              th:text="${it.index+1}"></span>
+                        <img th:src="${@defaultImage.cover(hot.cover)}" alt="">
+                    </div>
+                    <p class="lw-hot-title" th:text="${hot.title}"></p>
+                    <p class="lw-hot-info"><i class="fa fa-eye lw-mr5"></i>
+                        <th:block th:text="${hot.views}"></th:block>
+                    </p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="lw-right-item lw-tag-cloud">
+        <h4><i class="fa fa-tags lw-mr5" aria-hidden="true"></i>标签云</h4>
+        <!--/*@thymesVar id="tags" type="java.util.List<cn.kevinlu98.pojo.Tag>"*/-->
+        <a th:each="tag:${tags}" th:href="@{/tag/{id}.html(id=${tag.id})}" th:title="${tag.name}"
+           th:text="${tag.name}"></a>
+    </div>
+</th:block>
+<th:block th:fragment="article(articleList)">
+    <article th:each="article:${articleList}" class="lw-article-item lw-posr">
+        <div class="lw-article-cover lw-posa lw-xs-hidden">
+            <img th:src="${@defaultImage.cover(article.cover)}" alt="">
+        </div>
+        <div class="lw-article-info">
+            <h2>
+                <a th:href="@{/category/{id}.html(id=${article.category.id})}" class="lw-xs-hidden"><span
+                        class="lw-category" th:text="${article.category.name}"></span></a>
+                <a th:href="@{/{id}.html(id=${article.id})}" th:text="${article.title}"></a>
+            </h2>
+            <p class="lw-desc" th:text="${article.summary()}"></p>
+            <p class="lw-text-hidden lw-article-more">
+                <i class="fa fa-clock-o lw-mr5"></i>
+                <th:block th:text="${#dates.format(article.created,'yyyy-MM-dd HH:mm')}"></th:block>
+                <i class="fa fa-eye lw-mr5 lw-ml10"></i>
+                <th:block th:text="${article.views}"></th:block>
+                <i class="fa fa-comment lw-ml10 lw-mr5"></i>
+                <th:block th:text="${article.commentCount}"></th:block>
+                <i class="fa fa-tag lw-ml10 lw-mr5"></i>
+                <a th:each="tag:${article.tags}" th:href="@{/tag/{id}.html(id=${tag.id})}" class="lw-mr5"
+                   th:title="${tag.name}" th:text="${tag.name +','}"></a>
+            </p>
+        </div>
+    </article>
+</th:block>
+<th:block th:fragment="footer">
+    <div id="lw-right-bottom-bar">
+        <a id="lw-to-top" href="javascript:void(0)"><i class="fa  fa-arrow-up"></i></a>
+        <a target="_blank" th:href="${T(java.lang.String).format('tencent://message/?uin=%s&amp;Site=&amp;menu=yes',@webSite.qq)}"><i
+                class="fa  fa-qq"></i></a>
+    </div>
+    <div class="lw-friend-link">
+        <div class="lw-container">
+            <h2>友情链接</h2>
+            <!--/*@thymesVar id="friendlies" type="java.util.List<cn.kevinlu98.pojo.Friendly>"*/-->
+            <a th:each="friendly:${friendlies}" target="_blank" th:href="${friendly.link}" th:text="${friendly.title}">冷文学习者</a>
+        </div>
+    </div>
+    <footer th:utext="${@webSite.footer}"></footer>
+    <div class="lw-mask" id="lw-search-box">
+        <div class="lw-search-conetnt">
+            <a href="javascript:void(0)" class="lw-search-close lw-posa"><i class="fa fa-close"></i></a>
+            <div class="lw-search-input lw-posr">
+                <form th:action="@{/search.html}" method="get">
+                    <input required type="text" name="keyword" placeholder="请输入搜索关键字...">
+                    <button class="lw-posa"><i class="fa fa-search lw-mr5"></i>搜索</button>
+                </form>
+            </div>
+            <p>推荐关键字：
+                <a class="lw-mr5" th:each="keyword:${keywords}" th:href="@{/search.html(keyword=${keyword})}"
+                   th:text="${keyword}" th:title="${keyword}"></a>
+            </p>
+        </div>
+    </div>
+    <script src="/static/plugin/jquery/jquery-3.5.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/static/plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/plugin/swiper-bundle/swiper-bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script>
+        $(function () {
+            $(window).scroll(function () {
+                let toTop = $(window).scrollTop()
+                let height = $(window).height()
+                if (toTop > height / 2) {
+                    $('#lw-to-top').stop().animate({
+                        opacity: 1
+                    },500)
+                } else {
+                    $('#lw-to-top').stop().animate({
+                        opacity: 0
+                    },500)
+                }
+            })
+
+            $('#lw-to-top').on('click',function () {
+                $('body,html').stop().animate({
+                    scrollTop:0
+                })
+            })
+        })
+    </script>
+</th:block>
+</body>
+</html>

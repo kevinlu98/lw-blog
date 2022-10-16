@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/common::header(~{::title},~{},~{})">
+    <title>文章管理</title>
+</head>
+<body>
+<th:block th:include="admin/common::nav('article')"></th:block>
+
+<div class="container lw-main lw-banner">
+    <div class="btn-group" role="group" style="margin-bottom: 20px;" aria-label="...">
+        <a th:href="@{/admin/write.html}" class="btn btn-success"><i class="fa fa-plus"></i> 新增</a>
+    </div>
+    <form id="lw-search-form" class="form-inline" style="float:right;">
+        <div class="form-group">
+            <label>分类</label>
+            <select id="lw-article-category" class="form-control" style="width: 100px;">
+                <option value="">全部</option>
+                <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>状态</label>
+            <select id="lw-article-status" class="form-control" style="width: 100px;">
+                <option value="">全部</option>
+                <option value="1">发布</option>
+                <option value="2">草稿</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>类型</label>
+            <select id="lw-article-type" class="form-control" style="width: 100px;">
+                <option value="">全部</option>
+                <option value="1">文章</option>
+                <option value="2">页面</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>关键字</label>
+            <input type="text" id="lw-keywords" class="form-control" placeholder="请输入关键字...">
+        </div>
+        <button type="reset" id="lw-reset" class="btn btn-default"><i class="fa fa-refresh"></i> 重置</button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> 搜索</button>
+    </form>
+
+    <table id="data-table"></table>
+</div>
+
+
+<th:block th:include="admin/common::footer"></th:block>
+<script>
+    $(function () {
+
+        $('#lw-search-form').on('submit', function () {
+            $('#data-table').bootstrapTable('refresh', {silent: true, pageNumber: 1});
+            return false;
+        })
+
+
+        $('#data-table').bootstrapTable({
+            url: '/admin/article/search',
+            pagination: true,
+            pageNumber: 1,
+            sidePagination: 'server',
+            pageSize: 10,
+            pageList: [10, 20, 40],
+            responseHandler: function (res) {
+                return res.data
+            },
+            queryParams: function (params) {
+                return {
+                    pageNum: (params.offset / params.limit) + 1,
+                    pageSize: params.limit,
+                    title: $('#lw-keywords').val(),
+                    type: $('#lw-article-type').val(),
+                    status: $('#lw-article-status').val(),
+                    cid: $('#lw-article-category').val()
+                }
+            },
+            columns: [
+                {
+                    title: '序号',
+                    width: 50,
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1
+                    }
+                },
+                {
+                    title: '标题',
+                    field: 'title',
+                    formatter: function (value, row) {
+                        return `<a href="/admin/write.html?id=${row.id}">${value}</a> <a target="_blank" href="/${row.id}.html"><i class="fa fa-send"></i></a>`
+                    }
+                },
+                {
+                    title: '状态',
+                    field: 'status',
+                    formatter: function (value) {
+                        return value === 1 ? '发布' : '草稿'
+                    }
+                },
+                {
+                    title: '分类',
+                    field: 'category',
+                    formatter: function (value) {
+                        return `<a class="lw-category-table" href="javascript:void(0)" data-id="${value.id}">${value.name}</a>`
+                    }
+                },
+                {
+                    title: '文章类型',
+                    field: 'type',
+                    formatter: function (value) {
+                        return value === 1 ? '文章' : '页面'
+                    }
+                },
+                {
+                    title: '浏览量',
+                    field: 'views'
+                },
+                {
+                    title: '创建时间',
+                    field: 'created'
+                },
+                {
+                    field: 'id',
+                    title: '操作',
+                    width: 100,
+                    formatter: function (value) {
+                        return `<button type="button" data-id="${value}" class="btn btn-danger btn-sm lw-del-btn"><i class="fa fa-trash"></i> 删除</button>`
+                    }
+                },
+            ]
+        })
+
+
+        $("#data-table").on('click', '.lw-del-btn', function () {
+            let id = $(this).data('id')
+            let idx = layer.confirm('是否要删除该数据？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/admin/article/' + id,
+                    method: 'delete',
+                    dataType: 'json',
+                    success: res => {
+                        if (res.code === 200) {
+                            layer.msg("删除成功", {icon: 1})
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        } else {
+                            layer.msg(res.message, {icon: 2})
+                        }
+                    }
+                })
+                layer.close(idx);
+            })
+        }).on('click', '.lw-category-table', function () {
+            let cid = $(this).data('id')
+            $('#lw-reset').click()
+            $('#lw-article-category').val(cid)
+            $('#data-table').bootstrapTable('refresh', {silent: true, pageNumber: 1});
+        })
+
+    })
+</script>
+</body>
+</html>

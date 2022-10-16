@@ -1,0 +1,118 @@
+
+spring:
+  mail:
+    #  默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    # 邮箱服务器
+    host: smtp.qq.com
+    # 邮箱
+    username: 47721399@qq.com
+    # 密码
+    password: zicphgtbpctlcajc
+    # 端口
+    port: 587
+    # 其它属性，这里只开启debug输出错误信息
+    properties:
+      debug: true
+  # 定义jackson时间序列化格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # 数据库的连接信息
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lw-blog?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update # 更新或者创建数据表结构 如果数据库中没做表，Jpa会我们创建 这个配置就是在没有表的时候创建，实体类发生改变的话 会更新表结构
+    show-sql: true
+  thymeleaf:
+    # 关闭缓存
+    cache: false
+    # 模版的前缀
+    prefix: classpath:/templates/
+    # 开启模版的本地check
+    check-template-location: true
+    # 模版的后缀
+    suffix: .html
+    # 模版的编码
+    encoding: utf-8
+    # 响应头的content-Type
+    servlet:
+      content-type: text/html
+    # 模式H5
+    mode: HTML5
+  servlet:
+    multipart:
+      max-file-size: 20MB
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:/ehcache-spring.xml
+logging:
+  file:
+    path: ./logs
+  level:
+    root: info
+# 定义用户上传文件的路径
+upload:
+  base-dir: ./upload/
+website:
+  title: 冷文学习者
+  keywords:
+    - typecho
+    - freewind
+    - java
+    - 程序员
+    - springboot
+    - 学习
+    - 自学
+    - 冷文学习者
+    - 冷文图床
+  description: 冷文学习者(KEVINLU98.COM)，记录一个北漂小码农的日常业余生活
+  avatar: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/ad0278954bd84793b809913c3ded4592.jpg
+  nickname: Mr丶冷文
+  username: admin
+  password: 7fef6171469e80d32c0559f88b377245
+  address: 北京 昌平
+  tags:
+    - java
+    - springboot
+    - 大数据
+    - 网页设计
+    - php爱好者
+  url: http://localhost:8080
+  navdesc: 让崇拜从这里开始，用代码做点好玩的事件，让每一天都变的充实起来
+  qq: 1628048198
+  github: https://github.com/kevinlu98?tab=repositories
+  sina: https://weibo.com/lengwenboke
+  mail: kevinlu98@qq.com
+  logo: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/0ca438467dc2488a89766667a51a2793.png
+  footer: '<p>冷文学习者 版权所有 Copyright © www.kevinlu98.cn All Rights Reserved.</p> <p><a target="_blank" href="https://beian.miit.gov.cn">陕ICP备19024566-1号</a>
+<a style="margin-left: 10px" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402012109"><img style="vertical-align: top;" src="https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2046/d4ab98835b8842c88eededac6e7c9e35.png">京公网安备
+    11011402012109号</a></p>'
+default-image:
+  images:
+    - /static/image/1.jpg
+    - /static/image/2.jpg
+    - /static/image/3.jpg
+    - /static/image/4.jpg
+    - /static/image/5.jpg
+  avatars:
+    - /static/image/avatar/1.png
+    - /static/image/avatar/2.png
+    - /static/image/avatar/3.png
+    - /static/image/avatar/4.png
+    - /static/image/avatar/5.png
+    - /static/image/avatar/6.png
+    - /static/image/avatar/7.png
+    - /static/image/avatar/8.png
+    - /static/image/avatar/9.png
+    - /static/image/avatar/10.png
+    - /static/image/avatar/11.png
+    - /static/image/avatar/12.png
+    - /static/image/avatar/13.png
+server:
+  port: 9001

@@ -1,0 +1,13 @@
+.idea/
+*.iml
+.DS_Store
+target/
+cache/
+*.swp
+*.swo
+logs/
+upload/
+.project
+.classpath
+factoid.log
+factoid.log*

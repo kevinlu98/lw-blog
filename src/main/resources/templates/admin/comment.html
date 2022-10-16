@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/common::header(~{::title},~{},~{})">
+    <title>评论管理</title>
+</head>
+<body>
+<th:block th:include="admin/common::nav('comment')"></th:block>
+
+<div class="container lw-main lw-banner">
+    <div class="btn-group" role="group" style="margin-bottom: 20px;" aria-label="...">
+        <button type="button" id="lw-read-all" class="btn btn-default"><i class="fa fa-circle-o"></i> 一键已读</button>
+    </div>
+    <div id="lw-comment-search" class="btn-group" role="group" style="margin-bottom: 20px;float: right"
+         aria-label="...">
+        <button type="button" data-view="" th:class="${isView eq null}?'btn btn-primary':'btn btn-default'">全部
+        </button>
+        <button type="button" data-view="true" th:class="${isView eq true}?'btn btn-primary':'btn btn-default'">已读</button>
+        <button type="button" data-view="false" th:class="${isView eq false}?'btn btn-primary':'btn btn-default'">未读</button>
+    </div>
+    <table id="data-table"></table>
+</div>
+
+<th:block th:include="admin/common::footer"></th:block>
+<script>
+    $(function () {
+
+        $('#lw-comment-search button').on('click', function () {
+            $('#lw-comment-search .btn-primary').removeClass('btn-primary').addClass('btn-default')
+            $(this).removeClass('btn-default').addClass('btn-primary')
+            $('#data-table').bootstrapTable('refresh', {silent: true})
+        })
+
+
+        $('#lw-read-all').on('click', function () {
+            console.log(111);
+            $.ajax({
+                url: '/admin/comment/read',
+                dataType: 'json',
+                success: res => {
+                    if (res.code === 200) {
+                        layer.msg("保存成功", {icon: 1, time: 500}, function () {
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        })
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+        })
+        // $('#save-window').modal('show')
+
+        $('#data-table').bootstrapTable({
+            url: '/admin/comment/',
+            pagination: true,
+            pageNumber: 1,
+            sidePagination: 'server',
+            pageSize: 10,
+            pageList: [10, 20, 40],
+            responseHandler: function (res) {
+                return res.data
+            },
+            queryParams: function (params) {
+                return {
+                    pn: (params.offset / params.limit) + 1,
+                    ps: params.limit,
+                    view: $('#lw-comment-search .btn-primary').data('view')
+                }
+            },
+            onDblClickCell: function (field, value, row, $element) {
+                let comment = $(`#data-table .lw-comment-content`);
+                comment.parent().html(comment.val())
+                if (field === 'content') {
+                    $element.html(`<textarea class="form-control lw-comment-content">${value}</textarea>`)
+                    $('.lw-comment-content').blur(function () {
+                        let data = {id: row.id, content: $(this).val()}
+                        $.ajax({
+                            url: '/admin/comment/',
+                            method: 'post',
+                            data: data,
+                            dataType: 'json',
+                            success: res => {
+                                if (res.code === 200) {
+                                    layer.msg("保存成功", {icon: 1, time: 500}, function () {
+                                        $('#data-table').bootstrapTable('refresh', {silent: true})
+                                    })
+                                } else {
+                                    layer.msg(res.message, {icon: 2})
+                                }
+                            }
+                        })
+                    })
+                }
+            },
+            columns: [
+                {
+                    title: '序号',
+                    width: 50,
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1
+                    }
+                },
+
+                {
+                    title: '评论者的昵称',
+                    field: 'nickname',
+                    formatter: function (value, row, index) {
+                        let html = row.url ? `<a target="_blank" href="${row.url}">${value}</a>` : value
+                        return html + '<br>' + row.email
+                    }
+                },
+                {
+                    title: '评论内容',
+                    field: 'content'
+                },
+
+                {
+                    title: '是否已读',
+                    field: 'view',
+                    formatter: function (value) {
+                        return value ? '已读' : '未读'
+                    }
+                },
+
+                {
+                    title: '评论创建时间',
+                    field: 'created'
+                },
+
+                {
+                    field: 'id',
+                    title: '操作',
+                    width: 200,
+                    formatter: function (value, row) {
+                        return `<button type="button" data-aid="${row.article.id}" data-id="${value}" class="btn btn-info btn-sm lw-update-btn"><i class="fa fa-comment"></i> 回复</button> <button type="button" data-id="${value}" class="btn btn-danger btn-sm lw-del-btn"><i class="fa fa-trash"></i> 删除</button>`
+                    }
+                },
+            ]
+        })
+
+        $("#data-form").on('submit', function () {
+            let data = $(this).serialize();
+
+            $.ajax({
+                url: '/admin/comment/',
+                method: 'post',
+                data: data,
+                dataType: 'json',
+                success: res => {
+                    if (res.code === 200) {
+                        layer.msg("保存成功", {icon: 1, time: 500}, function () {
+                            $('#save-window').modal('hide')
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        })
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+
+
+            return false;
+        })
+
+        $("#data-table").on('click', '.lw-update-btn', function () {
+            //   获取目标资源id
+            let id = $(this).data('id')
+            let aid = $(this).data('aid')
+            layer.prompt({title: '回复', formType: 2}, function (text, index) {
+                layer.close(index);
+                $.ajax({
+                    url: '/admin/comment/' + id,
+                    method: 'post',
+                    data: {
+                        aid: aid,
+                        message: text
+                    }, dataType: 'json',
+                    success: res => {
+                        if (res.code === 200) {
+                            layer.msg("回复成功", {icon: 1})
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        } else {
+                            layer.msg(res.message, {icon: 2})
+                        }
+                    }
+                })
+            });
+
+        }).on('click', '.lw-del-btn', function () {
+            let id = $(this).data('id')
+            let idx = layer.confirm('是否要删除该数据？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/admin/comment/' + id,
+                    method: 'delete',
+                    dataType: 'json',
+                    success: res => {
+                        if (res.code === 200) {
+                            layer.msg("删除成功", {icon: 1})
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        } else {
+                            layer.msg(res.message, {icon: 2})
+                        }
+                    }
+                })
+                layer.close(idx);
+            })
+        })
+
+    })
+</script>
+</body>
+</html>

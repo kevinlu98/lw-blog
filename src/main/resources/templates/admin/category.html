@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/common::header(~{::title},~{},~{})">
+    <title>分类管理</title>
+</head>
+<body>
+<th:block th:include="admin/common::nav('category')"></th:block>
+
+<div class="container lw-main lw-banner">
+    <div class="btn-group" role="group" style="margin-bottom: 20px;" aria-label="...">
+        <button type="button" id="lw-add-btn" class="btn btn-default"><i class="fa fa-plus"></i> 新增</button>
+    </div>
+    <table id="data-table"></table>
+</div>
+
+<div class="modal fade" id="save-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="data-form">
+                <input type="hidden" name="id">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="window-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>标题</label>
+                        <input type="text" name="name" required class="form-control" placeholder="请输入标题...">
+                    </div>
+                    <div class="form-group">
+                        <label>描述信息</label>
+                        <textarea class="form-control" name="summary" placeholder="请输入描述信息..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="admin/common::footer"></th:block>
+<script>
+    $(function () {
+
+        // $('#save-window').modal('show')
+
+        $('#data-table').bootstrapTable({
+            url: '/admin/category/',
+            responseHandler: function (res) {
+                return res.data
+            },
+            columns: [
+                {
+                    title: '序号',
+                    width: 50,
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1
+                    }
+                },
+                {
+                    title: '标题',
+                    field: 'name'
+                },
+                {
+                    title: '描述',
+                    field: 'summary'
+                },
+                {
+                    field: 'id',
+                    title: '操作',
+                    width: 200,
+                    formatter: function (value) {
+                        return `<button type="button" data-id="${value}" class="btn btn-info btn-sm lw-update-btn"><i class="fa fa-edit"></i> 编辑</button> <button type="button" data-id="${value}" class="btn btn-danger btn-sm lw-del-btn"><i class="fa fa-trash"></i> 删除</button>`
+                    }
+                },
+            ]
+        })
+
+        $("#data-form").on('submit', function () {
+            let data = $(this).serialize();
+
+            $.ajax({
+                url: '/admin/category/',
+                method: 'post',
+                data: data,
+                dataType: 'json',
+                success: res => {
+                    if (res.code === 200) {
+                        layer.msg("保存成功", {icon: 1, time: 500}, function () {
+                            $('#save-window').modal('hide')
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        })
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+
+
+            return false;
+        })
+
+        $("#lw-add-btn").on('click', function () {
+            $("#window-title").text('新增分类')
+            $("#data-form").initForm({id: "", name: "", summary: ""})
+            $('#save-window').modal('show')
+        })
+
+        $("#data-table").on('click', '.lw-update-btn', function () {
+            //   获取目标资源id
+            let id = $(this).data('id')
+            $.ajax({
+                url: '/admin/category/' + id,
+                method: 'get',
+                dataType: 'json',
+                success: res => {
+                    if (res.code === 200) {
+                        $("#window-title").text('编辑分类')
+                        $("#data-form").initForm(res.data)
+                        $('#save-window').modal('show')
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+        }).on('click', '.lw-del-btn', function () {
+            let id = $(this).data('id')
+            let idx = layer.confirm('是否要删除该数据？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/admin/category/' + id,
+                    method: 'delete',
+                    dataType: 'json',
+                    success: res => {
+                        if (res.code === 200) {
+                            layer.msg("删除成功", {icon: 1})
+                            $('#data-table').bootstrapTable('refresh', {silent: true})
+                        } else {
+                            layer.msg(res.message, {icon: 2})
+                        }
+                    }
+                })
+                layer.close(idx);
+            })
+        })
+
+    })
+</script>
+</body>
+</html>

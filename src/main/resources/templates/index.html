@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="common::header(~{::title},~{::link},~{::style})">
+    <title th:text="${'首页 - '+@webSite.title}"></title>
+    <link rel="stylesheet" href="/static/plugin/swiper-bundle/swiper-bundle.min.css">
+    <style>
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<th:block th:include="common::nav"></th:block>
+
+
+<div class="lw-container lw-main lw-posr">
+    <div class="lw-left-list">
+        <div class="swiper mySwiper lw-swiper">
+            <div class="swiper-wrapper">
+                <div th:each="banner:${banners}" class="swiper-slide lw-posr">
+                    <img th:src="${banner.cover}" alt="" srcset="">
+                    <div class="lw-banner-info lw-posa">
+                        <a th:href="${banner.link}" target="_blank">
+                            <h2 class="lw-text-hidden"><span class="label label-danger lw-mr5">站长推荐</span>
+                                <th:block th:text="${banner.title}"></th:block>
+                            </h2>
+                        </a>
+                        <p th:text="${banner.summary}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="lw-article-list">
+            <th:block th:include="common::article(${articlePage.rows})"></th:block>
+        </div>
+        <ul th:if="${articlePage.totalPage>1}" class="lw-pagenation">
+            <li th:if="${articlePage.current != 1}"><a th:href="@{/}">首页</a></li>
+            <li th:each="num:${#numbers.sequence((articlePage.current < 3?1: articlePage.current -2) ,(articlePage.current < articlePage.totalPage -2?articlePage.current+2: articlePage.totalPage))}">
+                <a th:class="${articlePage.current eq num}?'lw-active':''" th:href="@{/(pn=${num})}"
+                   th:text="${num}"></a>
+            </li>
+            <li th:if="${articlePage.current != articlePage.totalPage}">
+                <a th:href="@{/(pn=${articlePage.totalPage})}">尾页</a>
+            </li>
+            <li th:text="${'共 '+ articlePage.totalPage +' 页'}"></li>
+        </ul>
+    </div>
+    <div class="lw-right-list lw-md-show lw-posa">
+        <th:block th:include="common::right"></th:block>
+    </div>
+</div>
+
+<th:block th:include="common::footer"></th:block>
+
+<script>
+    $(function () {
+        new Swiper(".mySwiper", {
+            cssMode: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+            },
+            mousewheel: true,
+            keyboard: true,
+            loop: true,
+            autoplay: true
+        });
+    })
+</script>
+</body>
+</html>

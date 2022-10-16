@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="header(title,link,style)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/static/plugin/bootstrap/css/bootstrap.min.css">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="/static/plugin/bootstrap-table/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/plugin/font-awesome/css/font-awesome.min.css">
+
+    <th:block th:replace="${link}"></th:block>
+    <!-- 自定义css文件 -->
+    <link rel="stylesheet" href="/static/admin/css/style.css">
+
+    <th:block th:replace="${style}"></th:block>
+</head>
+<body>
+
+<th:block th:fragment="nav(active)">
+    <nav class="navbar navbar-default">
+        <div class="container container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/admin/">博客后台</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li th:class="${active eq 'index'}?'active':''"><a th:href="@{/admin/}">控制台 <span
+                            class="sr-only">(current)</span></a></li>
+                    <li th:class="${active eq 'article'}?'active':''"><a th:href="@{/admin/article.html}">文章管理</a></li>
+                    <li th:class="${active eq 'category'}?'active':''"><a th:href="@{/admin/category.html}">分类管理</a>
+                    </li>
+                    <li th:class="${active eq 'banner'}?'active':''"><a th:href="@{/admin/banner.html}">轮播图管理</a></li>
+                    <li th:class="${active eq 'friendly'}?'active':''"><a th:href="@{/admin/friendly.html}">友链管理</a>
+                    </li>
+                    <li th:class="${active eq 'comment'}?'active':''"><a th:href="@{/admin/comment.html}">评论管理</a></li>
+                    <li th:class="${active eq 'navigation'}?'active':''"><a th:href="@{/admin/navigation.html}">导航管理</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/admin/logout">退出登录</a></li>
+                    <li><a target="_blank" href="/">网站前台</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</th:block>
+
+<th:block th:fragment="footer">
+    <footer>
+        <div class="container lw-footer">
+
+            <p>
+                © 2019-2020 <a href="/">冷文学习者</a> <a target="_blank"
+                                                          href="https://beian.miit.gov.cn">陕ICP备19024566-1号</a>
+                <a style="margin-left: 10px" target="_blank"
+                   href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402012109">京公网安备
+                    11011402012109号</a>
+            </p>
+            <p>如果您有什么好的意见或建议请发邮件至 <a href="#">kevinlu98@qq.com</a></p>
+        </div>
+    </footer>
+    <script src="/static/plugin/jquery/jquery-3.5.1.min.js"></script>
+    <script src="/static/plugin/jquery/jquery.form.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/static/plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/plugin/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/plugin/bootstrap-table/bootstrap-table-zh-CN.js"></script>
+    <script src="/static/plugin/layer/layer.js"></script>
+</th:block>
+
+</body>
+</html>

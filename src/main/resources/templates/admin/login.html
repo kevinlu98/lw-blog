@@ -1,0 +1,44 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="/static/plugin/font-awesome/css/font-awesome.min.css">
+  <!-- 自定义css文件 -->
+  <link rel="stylesheet" href="/static/admin/css/login.css">
+  <style>
+    .lw-error-msg {
+      color: coral;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="lw-login-page">
+    <div class="lw-login-box">
+      <div class="lw-left">
+        <h1>欢迎登录</h1>
+        <p>冷文学习者-管理后台</p>
+      </div>
+      <div class="lw-right">
+        <div class="lw-error-msg" th:text="${errorMsg}" th:if="${errorMsg != null}"></div>
+        <form th:action="@{/admin/login}" method="post">
+          <div class="lw-input">
+            <input name="username" type="text" placeholder="用户名">
+          </div>
+          <div class="lw-input">
+            <input name="password" readonly onfocus="this.removeAttribute('readonly')" type="password" placeholder="密码">
+          </div>
+          <div class="lw-input">
+            <button type="submit">登录后台</button>
+          </div>
+        </form>
+        <p>Copyright © www.kevinlu98.cn All Rights Reserved.
+          <br>
+          冷文学习者版权所有</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

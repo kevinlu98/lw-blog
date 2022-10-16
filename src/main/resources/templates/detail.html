@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="common::header(~{::title},~{::link},~{::style})">
+    <title th:text="${ article.title +' - '+@webSite.title}"></title>
+    <link rel="stylesheet" href="/static/css/detail.css">
+    <link rel="stylesheet" href="/static/plugin/prism/prism.css">
+    <style>
+        #lw-article-toc {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        #lw-article-toc a {
+            color: #888;
+            padding: 5px;
+            text-decoration: none;
+            display: block;
+        }
+
+        #lw-toc-parent.lw-toc-fixed {
+            position: fixed;
+            z-index: 999;
+            top: 10px;
+            width: 300px;
+        }
+
+        #lw-comment-form .lw-comment-submit {
+            background-color: #c2005f;
+            outline: none;
+            border: none;
+            padding: 5px 15px;
+            color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<th:block th:include="common::nav"></th:block>
+
+<div class="lw-container lw-main lw-posr">
+    <div class="lw-left-list">
+        <div class="lw-article-list">
+            <ol class="breadcrumb lw-crumb">
+                <li><a href="/">首页</a></li>
+                <li th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}"><a
+                        th:href="@{/category/{id}.html(id=${article.category.id})}"
+                        th:text="${article.category.name}"></a></li>
+                <li th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}" class="active">正文</li>
+                <li th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_PAGE}" class="active"
+                    th:text="${article.title}"></li>
+            </ol>
+            <div id="lw-article-box" class="lw-article">
+                <div class="lw-article-title">
+                    <h1 th:text="${article.title}"></h1>
+                    <p>
+                        <i class="fa fa-clock-o lw-mr5"></i>
+                        <th:block th:text="${#dates.format(article.created,'yyyy-MM-dd HH:mm')}"></th:block>
+                        <i class="fa fa-eye lw-mr5 lw-ml10"></i>
+                        <th:block th:text="${article.views}"></th:block>
+                        <i class="fa fa-comment lw-ml10 lw-mr5"></i>
+                        <th:block th:text="${article.commentCount}"></th:block>
+                        <i th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}"
+                           class="fa fa-folder  lw-ml10 lw-mr5"></i>
+                        <a th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}"
+                           th:href="@{/category/{id}.html(id=${article.category.id})}"
+                           th:text="${article.category.name}"></a></a>
+                        <i th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}"
+                           class="fa fa-tags  lw-ml10 lw-mr5"></i>
+                        <a th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}"
+                           th:each="tag:${article.tags}"
+                           th:href="@{/tag/{id}.html(id=${tag.id})}"
+                           th:text="${tag.name}"></a>
+                    </p>
+                </div>
+                <div class="lw-article-content" id="lw-article-content" th:utext="${article.showHtml()}"></div>
+                <ul class="lw-article-right">
+                    <li>
+                        <svg t="1664366825703" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg" p-id="919" width="200" height="200">
+                            <path d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z" fill="#FB3A83"
+                                  p-id="920"></path>
+                            <path d="M676.5 701c-9 0-16.6-6.3-18.1-15-1.1-6-2.5-11.6-4.2-16.7l-0.1-0.2-0.1-0.2c-9.1-31.5-29.1-59-56.6-78-26.2 13.2-55.6 20.1-85.3 20.1-29.8 0-59.2-7-85.5-20.2-27.6 19-47.7 46.5-56.8 78.1-0.2 0.7-2.1 7.9-4.8 18.5-2 8.1-9.3 13.7-17.8 13.7h-10.7c-4.8 0-9.4-2-12.5-5.6-3.1-3.5-4.6-8.2-4-12.8 8.1-60.2 46.2-113.1 101.7-141.5l5.4-2.8 5.1 3.4c23.5 15.9 51.1 24.3 79.8 24.3 28.7 0 56.2-8.4 79.7-24.2l5.1-3.4 5.4 2.8c55.4 28.4 93.4 81.3 101.5 141.4 0.6 4.6-0.8 9.3-4 12.8s-7.7 5.6-12.5 5.6h-10.7zM512.2 526.3c-74.5 0-135-60-135-133.6S437.7 259 512.2 259s135 60 135 133.6c0 73.7-60.5 133.7-135 133.7z m0-222.4c-49.6 0-89.9 39.8-89.9 88.8s40.3 88.8 89.9 88.8c49.6 0 89.9-39.8 89.9-88.8s-40.3-88.8-89.9-88.8z"
+                                  fill="#FFFFFF" p-id="921"></path>
+                        </svg>
+                        <span>版权所属: <a href="https://kevinlu98.cn/">冷文学习者</a></span>
+                    </li>
+                    <li>
+                        <svg t="1664366893739" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg" p-id="1067" width="200" height="200">
+                            <path d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z" fill="#FA5151"
+                                  p-id="1068"></path>
+                            <path d="M610.2 324c22.6 20.5 33.8 49 33.8 85.2 0 26.6-7.5 50.2-22.4 70.7-5.6 6.9-22.2 22.4-49.6 46.5-12.5 10.5-21.8 21.4-27.8 32.6-7.7 12.9-11.5 27.8-11.5 44.7v13.9h-49v-13.9c0-20.1 3.8-37.7 11.5-52.6 7.3-17.3 27.6-40.7 61-70.1 8.1-8.1 14.9-15.3 20.5-21.8 11.7-15.3 17.5-31.2 17.5-47.7 0-24.2-6.6-42.9-19.9-56.2-14.1-14.1-34.1-21.2-59.8-21.2-29.8 0-52.2 9.9-67.1 29.6-12.9 17.3-19.3 40.5-19.3 69.5h-48.4c0-41.9 11.9-75.7 35.7-101.5 25-26.6 58.8-39.9 101.5-39.9 39.7 0.2 70.7 10.9 93.3 32.2z m-75.5 346.4c6.8 6.9 10.3 15.3 10.3 25.4 0 10.5-3.4 19.1-10.3 26-7.7 6.9-16.3 10.3-26 10.3-10.5 0-19.1-3.4-26-10.3-7.3-7.3-10.9-15.9-10.9-26 0-10.5 3.6-18.9 10.9-25.4 6.4-6.8 15.1-10.3 26-10.3 10.4 0 19.1 3.4 26 10.3z"
+                                  fill="#FFFFFF" p-id="1069"></path>
+                        </svg>
+                        <span>本文链接: <a href="https://kevinlu98.cn/archives/101.html">https://kevinlu98.cn/archives/101.html</a></span>
+                    </li>
+                    <li>
+                        <svg t="1664366925081" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg" p-id="1215" width="200" height="200">
+                            <path d="M800.3 205.1L534.8 116c-16-5.4-33.3-5.3-49.2 0.2l-264.5 92.3c-29.3 10-49 37.5-49.1 68.4l1.7 265.4c0.7 81 31.1 158.9 85.6 218.9 25 27.7 56.9 51.5 97.8 72.7l144 74.6c9 4.7 19.7 4.6 28.7-0.2L672.5 832c40.4-21.6 72.2-45.7 96.9-73.8 53.6-60.6 83-138.9 82.6-219.8l-1.7-265.6c-0.5-30.9-20.5-58.1-50-67.7z"
+                                  fill="#FFC300" p-id="1216"></path>
+                            <path d="M512 597c-13.9 0-25.2-11.3-25.2-25.2V345.2c0-13.9 11.3-25.2 25.2-25.2 13.9 0 25.2 11.3 25.2 25.2v226.6c0 13.9-11.3 25.2-25.2 25.2z"
+                                  fill="#FFFFFF" p-id="1217"></path>
+                            <path d="M512 674.1m-29.9 0a29.9 29.9 0 1 0 59.8 0 29.9 29.9 0 1 0-59.8 0Z" fill="#FFFFFF"
+                                  p-id="1218"></path>
+                        </svg>
+                        <span>协议授权: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">《署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)》</a></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="lw-comment-box row lw-m0" id="lw-comment-box">
+                <h2>评论(
+                    <th:block th:text="${article.commentCount}"></th:block>
+                    )
+                </h2>
+                <form id="lw-comment-form">
+                    <input type="hidden" id="lw-article-id" name="article.id" th:value="${article.id}">
+                    <input type="hidden" name="pid" value="0">
+                    <div class="col-md-12 lw-p0" style="padding-right: 10px;">
+                        <textarea required name="content" placeholder="请输入你的评论..."></textarea>
+                    </div>
+                    <div class="col-md-4 col-xs-12 lw-comment-input lw-posr">
+                        <input name="nickname" required type="text" placeholder="请输入昵称...">
+                        <i class="fa fa-user  lw-comment-input  lw-posa"></i>
+                    </div>
+                    <div class="col-md-4 col-xs-12   lw-comment-input lw-posr">
+                        <input name="email" required type="email" placeholder="请输入电子邮件...">
+                        <i class="fa fa-envelope lw-posa"></i>
+                    </div>
+                    <div class="col-md-4 col-xs-12  lw-comment-input  lw-posr">
+                        <input name="url" type="url" placeholder="请输入主页地址...">
+                        <i class="fa fa-link fa-link lw-posa"></i>
+                    </div>
+                    <div class="col-md-12 col-xs-12  lw-comment-input  lw-posr" style="text-align: right">
+                        <button class="lw-comment-submit" type="submit">提交按钮</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="lw-comment-list">
+            <th:block th:fragment="comments">
+                <div class="lw-comment-list">
+                    <ul>
+                        <li class="lw-posr" th:each="comment:${commentPage.rows}">
+                            <div class="lw-comment-avatar lw-posa">
+                                <img th:src="${@defaultImage.avatar(comment.email)}" alt="">
+                            </div>
+                            <div class="lw-comment-content">
+                                <p>
+                                    <b th:text="${comment.nickname}"></b>
+                                    <span th:text="${#dates.format(comment.created,'yyyy-MM-dd HH:mm')}"></span>
+                                    <a th:data-id="${comment.id}" href="javascript:void(0)"
+                                       class="lw-comment-replay">回复</a>
+                                    <a href="javascript:void(0)" class="lw-comment-cancel"
+                                       style="display: none">取消回复</a>
+                                </p>
+                                <p class="lw-comment-info" th:text="${comment.content}"></p>
+                            </div>
+                            <ul th:if="${comment.children.size() > 0}">
+                                <li class="lw-posr" th:each="child:${comment.children}">
+                                    <div class="lw-comment-avatar lw-posa">
+                                        <img th:src="${@defaultImage.avatar(child.email)}" alt="">
+                                    </div>
+                                    <div class="lw-comment-content">
+                                        <p>
+                                            <b th:text="${child.nickname}"></b>
+                                            <span th:text="${#dates.format(child.created,'yyyy-MM-dd HH:mm')}"></span>
+                                            <a th:data-id="${child.id}" href="javascript:void(0)"
+                                               class="lw-comment-replay">回复</a>
+                                            <a href="javascript:void(0)" class="lw-comment-cancel"
+                                               style="display: none">取消回复</a>
+                                        </p>
+                                        <p class="lw-comment-info" th:text="${child.content}"></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <ul th:if="${commentPage.totalPage>1}" id="lw-page-list" class="lw-pagenation">
+                    <li th:if="${commentPage.current != 1}"><a href="javascript:void(0)" data-page="1">首页</a></li>
+                    <li th:each="num:${#numbers.sequence((commentPage.current < 3?1: commentPage.current -2) ,(commentPage.current < commentPage.totalPage -2?commentPage.current+2: commentPage.totalPage))}">
+                        <a th:class="${commentPage.current eq num}?'lw-active':''"
+                           href="javascript:void(0)"
+                           th:data-page="${num}"
+                           th:text="${num}"></a>
+                    </li>
+                    <li th:if="${commentPage.current != commentPage.totalPage}">
+                        <a href="javascript:void(0)" th:data-page="${commentPage.totalPage}">尾页</a>
+                    </li>
+                    <li th:text="${'共 '+ commentPage.totalPage +' 页'}"></li>
+                </ul>
+            </th:block>
+        </div>
+    </div>
+    <div class="lw-right-list lw-md-show lw-posa">
+        <th:block th:include="common::right"></th:block>
+        <div th:if="${article.type eq T(cn.kevinlu98.pojo.Article).TYPE_ARTICLE}" class="lw-right-item"
+             id="lw-toc-parent">
+            <h4><i class="fa fa-bars lw-mr5"></i>文章目录</h4>
+            <ul id="lw-article-toc"></ul>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="common::footer"></th:block>
+<script src="/static/plugin/prism/prism.js"></script>
+<script src="/static/plugin/layer/layer.js"></script>
+<script>
+    $(function () {
+        let articleId = $('#lw-article-id').val();
+        $('.lw-main').on('submit', '#lw-comment-form', function () {
+            let idx = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            let data = $(this).serialize();
+            $.ajax({
+                url: '/comment',
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: res => {
+                    layer.close(idx)
+                    if (res.code === 200) {
+                        layer.msg('评论成功', {icon: 1})
+                        commBoxReset()
+                        $('#lw-comment-list').load('/comment/' + articleId)
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                },
+                error: () => {
+                    layer.close(idx)
+                }
+            })
+            return false;
+        })
+
+        function commBoxReset() {
+            let source = $('#lw-comment-box')
+            let cloneBox = source.clone();
+            source.remove()
+            $('#lw-article-box').after(source)
+            $('#lw-comment-form input[name=pid]').val(0)
+            $('#lw-comment-form textarea').val('')
+            $('#lw-comment-list .lw-comment-cancel').hide()
+            $('#lw-comment-list .lw-comment-replay').show()
+        }
+
+        $('#lw-comment-list').on('click', '#lw-page-list a', function () {
+            let page = $(this).data('page')
+            $('#lw-comment-list').load(`/comment/${articleId}?pn=${page}`)
+        }).on('click', '.lw-comment-replay', function () {
+            $('#lw-comment-list .lw-comment-cancel').hide()
+            $('#lw-comment-list .lw-comment-replay').show()
+            let id = $(this).data('id');
+            let source = $('#lw-comment-box')
+            // 复制一个评论框
+            let cloneBox = source.clone();
+            //删除源评论框
+            source.remove()
+            //将复制的评论框加到目标评论的下方
+            $(this).parent().parent().append(source)
+            //更改pid
+            $('#lw-comment-form input[name=pid]').val(id)
+            $(this).hide()
+            $(this).parent().find('.lw-comment-cancel').show()
+        }).on('click', '.lw-comment-cancel', function () {
+            commBoxReset()
+        })
+
+
+        let offset = [10, 20, 30, 40, 50, 60]
+
+        let hTag = $('#lw-article-content .lw-title-toc')
+        let hMax = 6;
+        hTag.each((i, ele) => {
+            hMax = Math.min(ele.tagName.charAt(1), hMax)
+        })
+        for (let i = 0; i < offset.length; i++) {
+            offset[i] -= (hMax - 1) * 10
+        }
+        hTag.each((index, element) => {
+            let level = element.tagName.charAt(1)
+            let left = offset[level - 1]
+            $('#lw-article-toc').append(`<li><a style="padding-left: ${left}px;" href="javascript:void(0)" data-id="${$(element).attr('id')}">${$(element).text()}</a></li>`)
+        })
+
+        $('#lw-article-toc').on('click', 'li a', function () {
+            let id = $(this).data('id')
+            $('body,html').stop().animate({
+                scrollTop: $(`#${id}`).offset().top
+            })
+        })
+
+        $(window).scroll(function () {
+            let toTop = $(window).scrollTop()
+            let tagCloud = $('.lw-right-item.lw-tag-cloud');
+            let tagBottom = tagCloud.offset().top + tagCloud.height()
+            if (toTop > tagBottom - 10) {
+                $('#lw-toc-parent').addClass('lw-toc-fixed')
+            } else {
+                $('#lw-toc-parent').removeClass('lw-toc-fixed')
+            }
+        })
+    })
+</script>
+</body>
+</html>

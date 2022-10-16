@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="common::header(~{::title},~{},~{})">
+  <title th:text="${'标签云 - '+@webSite.title}"></title>
+</head>
+<body>
+<th:block th:include="common::nav"></th:block>
+
+
+<div class="lw-container lw-main lw-posr">
+  <div class="lw-left-list">
+    <ol class="breadcrumb lw-crumb">
+      <li><a href="/static">首页</a></li>
+      <li class="active">标签云</li>
+    </ol>
+    <div class="lw-tag-list">
+      <a th:each="tag:${tagList}" th:href="@{/tag/{id}.html(id=${tag.id})}" th:title="${tag.name}">
+        <th:block th:text="${tag.name}"></th:block>
+        <span th:text="${tag.articleCount}"></span>
+      </a>
+    </div>
+  </div>
+  <div class="lw-right-list lw-md-show lw-posa">
+    <th:block th:include="common::right"></th:block>
+  </div>
+</div>
+
+<th:block th:include="common::footer"></th:block>
+</body>
+</html>

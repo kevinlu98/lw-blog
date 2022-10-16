@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/common::header(~{::title},~{::link},~{::style})">
+    <title th:text="${pageTitle}"></title>
+    <link rel="stylesheet" href="/static/plugin/editormd/css/editormd.min.css">
+    <style>
+        #lw-select-tags {
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            min-height: 30px;
+            list-style: none;
+        }
+
+        #lw-select-tags li {
+            background-color: #eee;
+            padding: 6px 10px;
+            margin-bottom: 2px;
+            position: relative;
+        }
+
+        #lw-select-tags li a {
+            position: absolute;
+            right: 10px;
+            text-decoration: none;
+        }
+
+        #lw-unselect-tags {
+            list-style: none;
+            padding: 0;
+            background-color: #fff;
+            border: 1px solid #cccccc;
+            position: absolute;
+            width: 100%;
+            z-index: 9;
+        }
+
+        #lw-unselect-tags li {
+            border-bottom: 1px solid #cccccc;
+            padding: 10px;
+        }
+
+        #lw-unselect-tags li:hover {
+            background-color: #5bc0de;
+            cursor: pointer;
+        }
+
+        #lw-unselect-tags li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<th:block th:include="admin/common::nav('article')"></th:block>
+
+<div class="container lw-main">
+    <h3 style="margin-bottom: 30px;text-align: center" th:text="${pageTitle}"></h3>
+    <div class="row">
+        <form id="data-form" class="form-horizontal">
+            <div class="col-md-9">
+                <input type="hidden" name="id" th:value="${article.id eq null}?'':${article.id}">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">标题</label>
+                    <div class="col-sm-11">
+                        <input type="text" th:value="${article.title}" name="title" required class="form-control"
+                               placeholder="请输入标题...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">内容</label>
+                    <div class="col-sm-11">
+                        <div id="lw-markdown-content">
+                            <textarea name="content" th:text="${article.content}" style="display: none"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"></label>
+                    <a class="btn btn-info" th:href="@{/admin/article.html}">返回列表</a>
+                    <button type="submit" class="btn btn-success">保存文章</button>
+                </div>
+            </div>
+            <div class="col-md-3" style="background-color:#eeeeee;padding: 20px;">
+                <div class="form-group" style="margin: 0;">
+                    <label>缩略图</label>
+                    <img id="lw-upload-show" style="width: 100%;border: 1px solid #cccccc;"
+                         th:src="${article.cover.length()>0}?${article.cover}:'/static/admin/image/default.png'" alt="">
+                    <div style="text-align: right;margin-top: 10px;">
+                        <button class="btn btn-warning" type="button" id="lw-upload-btn"><i class="fa fa-image"></i>
+                            上传图片
+                        </button>
+                    </div>
+                    <input type="hidden" th:value="${article.cover}" name="cover" class="form-control">
+                    <input type="file" accept="image/jpg,image/jpeg,image/png,image/gif,image/bmp" id="lw-upload-file"
+                           style="display: none" class="form-control">
+                </div>
+
+                <div class="form-group" style="margin: 0;">
+                    <label>分类</label>
+                    <div class="radio" th:each="category:${categories}">
+                        <label>
+                            <input th:checked="${article.category != null and article.category.id eq category.id}" required name="cid" type="radio"
+                                   th:value="${category.id}">
+                            <th:block th:text="${category.name}"></th:block>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 10px 0 0;position:relative;">
+                    <label>标签</label>
+                    <ul id="lw-select-tags">
+                        <li th:each="tag:${article.tags}" th:data-value="${tag.name}">
+                            <th:block th:text="${tag.name}"></th:block>
+                            <a href="javascript:void(0)">x</a>
+                        </li>
+                    </ul>
+                    <input type="text" id="lw-tag-input" class="form-control">
+                    <ul id="lw-unselect-tags"></ul>
+                </div>
+                <div class="form-group" style="margin: 10px 0 0;">
+                    <label>其它设置</label>
+                    <div class="has-error">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="allowComment" th:checked="${article.allowComment eq 1}"
+                                       value="1">
+                                允许评论
+                            </label>
+                        </div>
+                    </div>
+                    <div class="has-error">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="status" th:checked="${article.status eq 2}" value="2">
+                                保存草稿
+                            </label>
+                        </div>
+                    </div>
+                    <div class="has-error">
+                        <div class="checkbox">
+                            <label>
+                                <input name="type" type="checkbox" th:checked="${article.type eq 2}" value="2">
+                                保存为页面
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<th:block th:include="admin/common::footer"></th:block>
+<script src="/static/plugin/editormd/editormd.js"></script>
+<script>
+    $(function () {
+        // 选中标签
+        let selectTags = {}
+        selectTags.add = function (key) {
+            if (key) {
+                if (!selectTags[key]) {
+                    if (unSelectTags[key]) {
+                        selectTags[key] = unSelectTags[key]
+                        delete unSelectTags[key]
+                    } else {
+                        selectTags[key] = {name: key}
+                    }
+                    $('#lw-select-tags').append(`<li data-value="${key}">${key} <a href="javascript:void(0)">x</a></li>`)
+                }
+                $('#lw-tag-input').val("")
+                $('#lw-unselect-tags').html('')
+            }
+        }
+
+        selectTags.toList = function () {
+            let result = []
+            Object.keys(selectTags).forEach(x => {
+                if (typeof selectTags[x] !== 'function')
+                    result.push(selectTags[x])
+            })
+            return result
+        }
+
+        //未选中标签
+        let unSelectTags = {}
+
+        //搜索功能
+        unSelectTags.search = function (keyword) {
+            let result = []
+            Object.keys(unSelectTags).forEach(x => {
+                if (x.indexOf(keyword) > -1 && typeof unSelectTags[x] !== 'function') {
+                    result.push(unSelectTags[x])
+                }
+            })
+            return result;
+        }
+
+        $.ajax({
+            url: '/admin/tag/',
+            dataType: 'json',
+            success: res => {
+                res.data.forEach(x => unSelectTags[x.name] = x)
+                $('#lw-select-tags li').each((index, ele) => {
+                    let key = $(ele).data('value')
+                    console.log(key);
+                    selectTags[key] = unSelectTags[key]
+                    delete unSelectTags[key]
+                })
+                console.log(unSelectTags);
+            }
+        })
+
+        //监听键盘的输入事件，在输入时搜索未选中的标签列表，将匹配到的标签显示在ul里
+        $('#lw-tag-input').on('input', function () {
+            let ust = $('#lw-unselect-tags')
+            ust.html('')
+            unSelectTags.search($(this).val()).forEach(x => ust.append(`<li>${x.name}</li>`))
+        }).on('keydown', function (e) {
+            if (e.keyCode === 13) {
+                selectTags.add($(this).val())
+            }
+        })
+
+        // 给body一个点击事件，点击body时清空搜索列表的内容
+        $('body').on('click', function () {
+            $('#lw-unselect-tags').html('')
+        })
+
+        // 给提示标签列表里的标签加上点击事件，点击里将标签的保存到已选中的标签列表中，同时给将其加入选中列表的ul里
+        $('#lw-unselect-tags').on('click', 'li', function () {
+            selectTags.add($(this).text())
+        })
+
+        //给选中列表的ul中的li下a一个点击事件，点击时删除该元素且从选中标签列表中删除标签，同时在未选中标签列表中加入标签
+        $('#lw-select-tags').on('click', 'a', function () {
+            let tagLi = $(this).parent()
+            let key = tagLi.data('value')
+            if (selectTags[key].id) {
+                unSelectTags[key] = selectTags[key]
+                delete selectTags[key]
+            }
+            tagLi.remove()
+        })
+
+        // 给表单一个监听回车的事件，我们按下回车后直接返回false，阻止表单提交
+        $('#data-form').on('keydown', function (e) {
+            if (e.keyCode === 13) {
+                return false;
+            }
+        }).on('submit', function () {
+            // a=1&b=2 表单
+            //a=1&b=2&category.id=1&tags[]=a&tags[]=2
+            // {a:1,b:2} json
+            let data = $(this).serializeJson()
+            data['category'] = {id: data['cid']}
+            data['tags'] = selectTags.toList()
+            console.log(data);
+            $.ajax({
+                url: '/admin/article/',
+                method: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: res => {
+                    if (res.code === 200) {
+                        layer.msg('保存成功', {icon: 1, time: 500}, function () {
+                            location.href = '/admin/article.html'
+                        })
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+            return false;
+        })
+
+        editormd('lw-markdown-content', {
+            height: 800,
+            emoji: true,
+            toolbarAutoFixed: false,
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/admin/md/upload",
+            path: '/static/plugin/editormd/lib/',
+            toolbarIcons: ["undo", "redo", "|", "bold", "del", "italic", "quote", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                "list-ul", "list-ol", "hr", "|", "link", "image", "code", "code-block",
+                "table", "emoji", "search", "|", "watch", "preview", "fullscreen"],
+            onfullscreen: function () {
+                this.editor.css('z-index', 120)
+            },
+            onfullscreenExit: function () {
+                this.editor.css('z-index', 10)
+            }
+        })
+
+
+        $('#lw-upload-btn').on('click', function () {
+            $('#lw-upload-file').click()
+        })
+
+        $('#lw-upload-file').on('change', function () {
+            let file = this.files[0]
+            let fd = new FormData();
+            fd.append('file', file);
+            $.ajax({
+                url: '/admin/upload',
+                method: 'post',
+                data: fd,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: res => {
+                    if (res.code === 200) {
+                        $('#lw-upload-show').attr('src', res.data);
+                        $('#data-form [name=cover]').val(res.data);
+                    } else {
+                        layer.msg(res.message, {icon: 2})
+                    }
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>

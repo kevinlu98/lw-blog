@@ -1,0 +1,28 @@
+
+.lw-main {
+    min-height: 75vh;
+}
+
+.lw-footer {
+    padding: 20px;
+}
+
+.lw-banner textarea {
+    height: 100px;
+    width: 100%;
+    resize: none;
+}
+
+.lw-banner img {
+    width: 200px;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+footer {
+    background-color: #f8f8f8;
+    text-align: center;
+    height: 200px
+}

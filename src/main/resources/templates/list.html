@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="common::header(~{::title},~{},~{})">
+    <title th:if="${pageType eq 'category'}" th:text="${category.name + ' - '+@webSite.title}"></title>
+    <title th:if="${pageType eq 'tag'}" th:text="${tag.name + ' - '+@webSite.title}"></title>
+    <title th:if="${pageType eq 'search'}" th:text="${keyword + ' - '+@webSite.title}"></title>
+</head>
+<body>
+<th:block th:include="common::nav"></th:block>
+
+
+<div class="lw-container lw-main lw-posr">
+    <div class="lw-left-list">
+        <ol class="breadcrumb lw-crumb">
+            <li><a href="/">首页</a></li>
+            <li th:if="${pageType eq 'category'}"><a href="/" th:href="@{/category.html}">分类大全</a></li>
+            <li th:if="${pageType eq 'tag'}"><a href="/" th:href="@{/tag.html}">标签云</a></li>
+            <li th:if="${pageType eq 'category'}" class="active" th:text="${category.name}"></li>
+            <li th:if="${pageType eq 'tag'}" class="active" th:text="${tag.name}"></li>
+            <li th:if="${pageType eq 'search'}" class="active" th:text="${'包含关键字 '+keyword+' 的文章'}"></li>
+        </ol>
+        <div class="lw-article-list">
+            <th:block th:include="common::article(${articlePage.rows})"></th:block>
+        </div>
+        <ul th:if="${articlePage.totalPage>1 and pageType eq 'category'}" class="lw-pagenation">
+            <li th:if="${articlePage.current != 1}"><a th:href="@{/category/{id}.html(id=${category.id})}">首页</a></li>
+            <li th:each="num:${#numbers.sequence((articlePage.current < 3?1: articlePage.current -2) ,(articlePage.current < articlePage.totalPage -2?articlePage.current+2: articlePage.totalPage))}">
+                <a th:class="${articlePage.current eq num}?'lw-active':''" th:href="@{/category/{id}.html(id=${category.id},pn=${num})}"
+                   th:text="${num}"></a>
+            </li>
+            <li th:if="${articlePage.current != articlePage.totalPage}">
+                <a th:href="@{/category/{id}.html(id=${category.id},pn=${articlePage.totalPage})}">尾页</a>
+            </li>
+            <li th:text="${'共 '+ articlePage.totalPage +' 页'}"></li>
+        </ul>
+        <ul th:if="${articlePage.totalPage>1 and pageType eq 'tag'}" class="lw-pagenation">
+            <li th:if="${articlePage.current != 1}"><a th:href="@{/tag/{id}.html(id=${tag.id})}">首页</a></li>
+            <li th:each="num:${#numbers.sequence((articlePage.current < 3?1: articlePage.current -2) ,(articlePage.current < articlePage.totalPage -2?articlePage.current+2: articlePage.totalPage))}">
+                <a th:class="${articlePage.current eq num}?'lw-active':''" th:href="@{/tag/{id}.html(id=${tag.id},pn=${num})}"
+                   th:text="${num}"></a>
+            </li>
+            <li th:if="${articlePage.current != articlePage.totalPage}">
+                <a th:href="@{/tag/{id}.html(id=${tag.id},pn=${articlePage.totalPage})}">尾页</a>
+            </li>
+            <li th:text="${'共 '+ articlePage.totalPage +' 页'}"></li>
+        </ul>
+        <ul th:if="${articlePage.totalPage>1 and pageType eq 'search'}" class="lw-pagenation">
+            <li th:if="${articlePage.current != 1}"><a th:href="@{/search.html(keyword=${keyword})}">首页</a></li>
+            <li th:each="num:${#numbers.sequence((articlePage.current < 3?1: articlePage.current -2) ,(articlePage.current < articlePage.totalPage -2?articlePage.current+2: articlePage.totalPage))}">
+                <a th:class="${articlePage.current eq num}?'lw-active':''" th:href="@{search.html(keyword=${keyword},pn=${num})}"
+                   th:text="${num}"></a>
+            </li>
+            <li th:if="${articlePage.current != articlePage.totalPage}">
+                <a th:href="@{search.html(keyword=${keyword},pn=${articlePage.totalPage})}">尾页</a>
+            </li>
+            <li th:text="${'共 '+ articlePage.totalPage +' 页'}"></li>
+        </ul>
+    </div>
+    <div class="lw-right-list lw-md-show lw-posa">
+        <th:block th:include="common::right"></th:block>
+    </div>
+</div>
+
+<th:block th:include="common::footer"></th:block>
+
+</body>
+</html>

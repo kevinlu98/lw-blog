@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/common::header(~{::title},~{},~{})">
+    <title>控制台</title>
+</head>
+<body>
+<th:block th:include="admin/common::nav('index')"></th:block>
+
+<div class="container lw-main">
+    <div class="jumbotron">
+        <h3>网站概要</h3>
+        <p>目前有 <i th:text="${article}"></i> 篇文章, 并有 <i th:text="${comment}"></i> 条关于你的评论在 <i
+                th:text="${category}"></i> 个分类中.</p>
+        <p>其中有 <i th:text="${commentFalse}"></i>条 评论未查看:</p>
+        <p><a class="btn btn-primary btn-lg" th:href="@{/admin/comment.html(view=false)}" role="button">点此查看</a></p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item disabled">
+                    <b>最新文章</b>
+                </li>
+                <li class="list-group-item" th:each="post:${newArticleList}">
+                    <span class="badge" th:text="${#dates.format(post.created,'MM-dd')}">09-28</span>
+                    <a target="_blank" th:href="@{/{id}.html(id=${post.id})}" th:text="${post.title}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item disabled">
+                    <b>最新评论</b>
+                </li>
+                <li class="list-group-item" th:each="comm:${newCommentList}">
+                    <span class="badge" th:text="${#dates.format(comm.created,'MM-dd')}">09-29</span>
+                    <th:block th:text="${comm.content}"></th:block>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<th:block th:include="admin/common::footer"></th:block>
+
+
+</body>
+</html>
