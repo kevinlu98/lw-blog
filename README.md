@@ -126,7 +126,7 @@ logging:
 upload:
   base-dir: ./upload/
 website:
-	# 站点标题
+  # 站点标题
   title: 冷文学习者
   # SEO 关键字
   keywords:
