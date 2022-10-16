@@ -1,19 +1,17 @@
-
 spring:
   mail:
+    # 是否开启邮件通知
+    enable: true
     #  默认的邮件编码为UTF-8
     default-encoding: UTF-8
     # 邮箱服务器
     host: smtp.qq.com
     # 邮箱
-    username: 47721399@qq.com
+    username: xxx@qq.com
     # 密码
-    password: zicphgtbpctlcajc
+    password: xxxx
     # 端口
     port: 587
-    # 其它属性，这里只开启debug输出错误信息
-    properties:
-      debug: true
   # 定义jackson时间序列化格式
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -60,7 +58,9 @@ logging:
 upload:
   base-dir: ./upload/
 website:
+  # 站点标题
   title: 冷文学习者
+  # SEO 关键字
   keywords:
     - typecho
     - freewind
@@ -71,35 +71,53 @@ website:
     - 自学
     - 冷文学习者
     - 冷文图床
+  # SEO描述信息
   description: 冷文学习者(KEVINLU98.COM)，记录一个北漂小码农的日常业余生活
+  # 站长头像
   avatar: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/ad0278954bd84793b809913c3ded4592.jpg
+  # 站长昵称
   nickname: Mr丶冷文
+  # 管理页用户名
   username: admin
+  # 管理页密码，用MD5加密后的密文
   password: 7fef6171469e80d32c0559f88b377245
+  # 站长坐标
   address: 北京 昌平
+  # 站长标签
   tags:
     - java
     - springboot
     - 大数据
     - 网页设计
     - php爱好者
+  # 站点URL
   url: http://localhost:8080
+  # 网站上面的一句话
   navdesc: 让崇拜从这里开始，用代码做点好玩的事件，让每一天都变的充实起来
+  # 站长QQ
   qq: 1628048198
+  # 站长Github
   github: https://github.com/kevinlu98?tab=repositories
+  # 站长新浪
   sina: https://weibo.com/lengwenboke
+  # 站长邮箱
   mail: kevinlu98@qq.com
+  # 网站LOGO
   logo: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/0ca438467dc2488a89766667a51a2793.png
+  # 网站底部信息
   footer: '<p>冷文学习者 版权所有 Copyright © www.kevinlu98.cn All Rights Reserved.</p> <p><a target="_blank" href="https://beian.miit.gov.cn">陕ICP备19024566-1号</a>
 <a style="margin-left: 10px" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402012109"><img style="vertical-align: top;" src="https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2046/d4ab98835b8842c88eededac6e7c9e35.png">京公网安备
     11011402012109号</a></p>'
+# 默认图片配置
 default-image:
+  # 文章没有封面时默认从下述的图片取一个，可以使用外链的方式
   images:
     - /static/image/1.jpg
     - /static/image/2.jpg
     - /static/image/3.jpg
     - /static/image/4.jpg
     - /static/image/5.jpg
+  # 评论者如果使用QQ邮箱评论，直接取QQ头像作为评论头像，反之使用下面的随机图片做为头像，可以使用外链
   avatars:
     - /static/image/avatar/1.png
     - /static/image/avatar/2.png
@@ -115,4 +133,5 @@ default-image:
     - /static/image/avatar/12.png
     - /static/image/avatar/13.png
 server:
-  port: 9001
+  port: 9001 # 端口，给一个服务器上没有被占用的ip
+
