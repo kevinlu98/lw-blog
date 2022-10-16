@@ -23,6 +23,9 @@ public class MailHelper {
 
     @Value("${spring.mail.username}")
     private String from;
+
+    @Value("${spring.mail.enable}")
+    private boolean enable;
     private final JavaMailSender javaMailSender;
 
     public MailHelper(JavaMailSender javaMailSender) {
@@ -38,6 +41,7 @@ public class MailHelper {
      */
     @Async
     public void sendMail(String send, String subject, String text) {
+        if (!enable) return;
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
