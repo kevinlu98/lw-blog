@@ -96,6 +96,8 @@ website:
   url: http://localhost:8080
   # 网站上面的一句话
   navdesc: 让崇拜从这里开始，用代码做点好玩的事件，让每一天都变的充实起来
+  # 开启CDN 开启注解即可赋值即可
+#  cdn:
   # 站长QQ
   qq: 1628048198
   # 站长Github

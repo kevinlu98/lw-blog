@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "website.keywords",
+      "type": "java.lang.String",
+      "description": "Description for website.keywords."
+    },
+    {
+      "name": "website.avatar",
+      "type": "java.lang.String",
+      "description": "Description for website.avatar."
+    }
+  ] }

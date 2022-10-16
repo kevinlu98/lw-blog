@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.kevinlu98</groupId>
-    <artifactId>my-blog</artifactId>
+    <artifactId>lw-blog</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
         <lombok.version>1.18.24</lombok.version>
-        <commonmark.version>0.18.1</commonmark.version>
+        <commonmark.version>0.19.0</commonmark.version>
     </properties>
 
     <dependencies>

@@ -2,8 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="common::header(~{::title},~{::link},~{::style})">
     <title th:text="${ article.title +' - '+@webSite.title}"></title>
-    <link rel="stylesheet" href="/static/css/detail.css">
-    <link rel="stylesheet" href="/static/plugin/prism/prism.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/css/detail.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/prism/prism.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/katex/katex.min.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/APlayer/APlayer.min.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/css/markdown.extend.css'}">
     <style>
         #lw-article-toc {
             list-style: none;
@@ -207,10 +210,39 @@
 </div>
 
 <th:block th:include="common::footer"></th:block>
-<script src="/static/plugin/prism/prism.js"></script>
-<script src="/static/plugin/layer/layer.js"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/prism/prism.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/layer/layer.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/katex/katex.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/katex/contrib/auto-render.min.js'}" onload="renderMathInElement(document.body);"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/APlayer/APlayer.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/MetingJS/Meting.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/editormd/lib/raphael.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/editormd/lib/flowchart.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/editormd/lib/underscore.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/editormd/lib/sequence-diagram.min.js'}"></script>
 <script>
     $(function () {
+        $("#lw-article-content").on('click', '.fwh .fwthead', function () {
+            $(this).parent().children('.fwthead').removeClass('fwcurrent')
+            $(this).addClass('fwcurrent')
+            $(this).parent().parent().find('.fwtbody').hide()
+            $(this).parent().parent().find(`.fwtbody-${$(this).data('target')}`).stop().fadeIn()
+        })
+        $("#lw-article-content .fwtab .fwh .fwthead:first-child").click()
+
+        $('#lw-article-content code.language-flow').each((index, element) => {
+
+            chart = flowchart.parse($(element).text());
+            $(element).parent().after(`<div id="canvas-${index}"></div>`).remove()
+            chart.drawSVG(`canvas-${index}`);
+        })
+
+        $('#lw-article-content code.language-seq').each((index, element) => {
+            let code = $(element).text()
+            $(element).parent().after(`<div id="seq-${index}">${code}</div>`).remove()
+            $(`#seq-${index}`).sequenceDiagram({theme: 'simple'});
+        })
+
         let articleId = $('#lw-article-id').val();
         $('.lw-main').on('submit', '#lw-comment-form', function () {
             let idx = layer.load(1, {

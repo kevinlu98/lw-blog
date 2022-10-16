@@ -1,14 +1,14 @@
-# lwBlog 部署
+# lw-blog 部署
 
 ## 介绍
 
->**项目名称**：FwBlog
+>**项目名称**：lw-blog
 >
 >**作者：** [Mr丶冷文](https://kevinlu98.cn)
 >
 >**版本：** 1.0
 >
->**地址：** [https://github.com/kevinlu98/lwBlog](https://github.com/kevinlu98/lwBlog)
+>**地址：** [https://github.com/kevinlu98/lw-blog](https://github.com/kevinlu98/lw-blog)
 >
 >**描述信息：** 基于Java的一个功能完善颜值优雅且支持缓存的个人博客，整个博客的开发过程已录制成教程在[传送门](https://www.bilibili.com/medialist/play/372653463?from=space&business=space&sort_field=pubtime&spm_id_from=333.999.0.0)
 
@@ -67,9 +67,10 @@
 - 修改配置文件
 
 ```yaml
-
 spring:
   mail:
+    # 是否开启邮件通知
+    enable: true
     #  默认的邮件编码为UTF-8
     default-encoding: UTF-8
     # 邮箱服务器
@@ -142,7 +143,7 @@ website:
   # SEO描述信息
   description: 冷文学习者(KEVINLU98.COM)，记录一个北漂小码农的日常业余生活
   # 站长头像
-  avatar: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/ad0278954bd84793b809913c3ded4592.jpg
+  avatar: /static/image/avatar/1.png
   # 站长昵称
   nickname: Mr丶冷文
   # 管理页用户名
@@ -151,6 +152,8 @@ website:
   password: 7fef6171469e80d32c0559f88b377245
   # 站长坐标
   address: 北京 昌平
+  # 站点favicon
+  favicon: /static/image/favicon.png
   # 站长标签
   tags:
     - java
@@ -170,15 +173,15 @@ website:
   sina: https://weibo.com/lengwenboke
   # 站长邮箱
   mail: kevinlu98@qq.com
-  # 网站LOGO 
-  logo: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/0ca438467dc2488a89766667a51a2793.png
+  # 网站LOGO 300 x 80
+  logo: /static/image/logo.png
   # 网站底部信息
   footer: '<p>冷文学习者 版权所有 Copyright © www.kevinlu98.cn All Rights Reserved.</p> <p><a target="_blank" href="https://beian.miit.gov.cn">陕ICP备19024566-1号</a>
 <a style="margin-left: 10px" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402012109"><img style="vertical-align: top;" src="https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2046/d4ab98835b8842c88eededac6e7c9e35.png">京公网安备
     11011402012109号</a></p>'
 # 默认图片配置
 default-image:
-  # 文章没有封面时默认从下述的图片取一个，可以使用外链的方式 
+  # 文章没有封面时默认从下述的图片取一个，可以使用外链的方式
   images:
     - /static/image/1.jpg
     - /static/image/2.jpg
@@ -203,6 +206,7 @@ default-image:
 server:
   port: 9001 # 端口，给一个服务器上没有被占用的ip
 
+
 ```
 
 
@@ -212,7 +216,6 @@ server:
 ```powershell
 --spring.config.local=/www/wwwroot/jokeryan.cn/application.yml
 ```
-
 
 
 

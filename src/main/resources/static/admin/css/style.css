@@ -26,3 +26,19 @@ footer {
     text-align: center;
     height: 200px
 }
+
+input[type=text], input[type=password], input[type=email], textarea { background: #FFF; border: 1px solid #D9D9D6; padding: 7px; border-radius: 2px; box-sizing: border-box; }
+
+input[type=text]:disabled, input[type=text]:read-only, input[type=password]:disabled, input[type=password]:read-only, input[type=email]:disabled, input[type=email]:read-only, textarea:disabled, textarea:read-only { background: #F3F3F3; }
+
+textarea { resize: vertical; line-height: 1.5; }
+
+input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
+
+input[type="radio"], input[type="checkbox"], input[type="radio"] + label, input[type="checkbox"] + label { vertical-align: middle; }
+
+input.text-s, textarea.text-s { padding: 5px; }
+
+input.text-l, textarea.text-l { padding: 10px; font-size: 1.14286em; }
+
+select { border: 1px solid #CCC; height: 28px; }
