@@ -35,4 +35,5 @@ public class WebSite {
     private String mail;
     private String footer;
     private String logo;
+    private String favicon;
 }

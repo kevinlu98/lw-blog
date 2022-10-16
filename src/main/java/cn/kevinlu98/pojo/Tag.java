@@ -1,5 +1,7 @@
 package cn.kevinlu98.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
 @Table(name = "blog_tag")
