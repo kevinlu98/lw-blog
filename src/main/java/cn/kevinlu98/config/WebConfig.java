@@ -51,14 +51,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/upload/**").addResourceLocations("file://" + absolutePath);
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/login")
-                .excludePathPatterns("/admin/login.html")
-                .excludePathPatterns("/admin/logout");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(loginInterceptor)
+//                .addPathPatterns("/admin/**")
+//                .excludePathPatterns("/admin/login")
+//                .excludePathPatterns("/admin/login.html")
+//                .excludePathPatterns("/admin/logout");
+//    }
 
     @Bean
     public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {

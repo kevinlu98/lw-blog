@@ -11,3 +11,4 @@ upload/
 .classpath
 factoid.log
 factoid.log*
+src/main/resources/application-dev.yml

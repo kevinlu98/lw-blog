@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="common::header(~{::title},~{::link},~{::style})">
     <title th:text="${'首页 - '+@webSite.title}"></title>
-    <link rel="stylesheet" href="/static/plugin/swiper-bundle/swiper-bundle.min.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/swiper-bundle/swiper-bundle.min.css'}">
     <style>
         .swiper-slide {
             text-align: center;

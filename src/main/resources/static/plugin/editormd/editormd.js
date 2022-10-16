@@ -2015,7 +2015,20 @@
             marked.setOptions(markedOptions);
                     
             var newMarkdownDoc = editormd.$marked(cmValue, markedOptions);
-            
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwcode *type=[”"“]([\s\S]*?)[”"“] *}(<br>)?([\s\S]*?)(<br>)?{\/fwcode *}/g,'<div class="fwcode fwcode-$1">$3</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwcline *start=[”"“]([\s\S]*?)[”"“] *end=[”"“]([\s\S]*?)[”"“] *}[\s\S]*?{\/fwcline *}/g,'<div class="fwcline" style="background-image: linear-gradient(-45deg,transparent 0,transparent 10%,$2 0,$2 40%,transparent 0,transparent 60%,$1 0,$1 90%,transparent 0,transparent 100%);"></div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwbili *bvid=[”"“]([\s\S]*?)[”"“] *bvnu=[”"“]([\s\S]*?)[”"“] *}([\s\S]*?){\/fwbili *}/g,'<iframe class="fwbili" src="//player.bilibili.com/player.html?bvid=$1&page=$2"></iframe>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwalert *type=[”"“]([\s\S]*?)[”"“] *}(<br>)*([\s\S]*?)(<br>)*{\/fwalert *}/g,'<div class="fwalert fwalert-$1">$3</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwbtn *type=[”"“](.*?)[”"“] *url=[”"“](.*?)[”"“][ ]*}(<br>)*{icon=[”"“](.*?)[”"“] *}(.*?)(<br>)*{\/fwbtn *}/g,'<a class="fwbtn fwbtn-$1" href="$2" target="_blank"><i class="fa $4"></i>$5</a>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwgroup *title=[”"“](.*?)[”"“] *}(<br>)?([\s\S]*?)(<br>)?{\/fwgroup *}/g,'<div class="fwgroup pos-rlt"><div class="fwgroup-title pos-abs">$1</div>$3</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwthead *target=[”"“](.*?)[”"“] *}(<br>)*([\s\S]*?)(<br>)*{\/fwthead *}/g,'<div class="fwthead" data-target="$1">$3</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwtbody *target=[”"“](.*?)[”"“] *}(<br>)?([\s\S]*?)(<br>)?{\/fwtbody *}/g,'<div class="fwtbody fwtbody-$1">$3</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwh *}(<br>)*([\s\S]*?)(<br>)*{\/fwh *}/g,'<div class="fwh">$2</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwb *}(<br>)*([\s\S]*?)(<br>)*{\/fwb *}/g,'<div class="fwb">$2</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwtab *}(<br>)*([\s\S]*?)(<br>)*{\/fwtab *}/g,'<div class="fwtab">$2</div>')
+            newMarkdownDoc = newMarkdownDoc.replace(/{fwmusic *source=[”"“]([\s\S]*?)[”"“] *type=[”"“]([\s\S]*?)[”"“] *id=[”"“]([\s\S]*?)[”"“] *}[\s\S]*?{\/fwmusic *}/g,`<meting-js server="$1" type="$2" id="$3"></meting-js>`)
+
+
             //console.info("cmValue", cmValue, newMarkdownDoc);
             
             newMarkdownDoc = editormd.filterHTMLTags(newMarkdownDoc, settings.htmlDecode);

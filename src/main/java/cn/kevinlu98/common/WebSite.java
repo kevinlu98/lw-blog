@@ -3,6 +3,7 @@ package cn.kevinlu98.common;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class WebSite {
 
     public static final String LOGIN_SIGN = "login_sign";
     private String title;
+    private String cdn = "";
     private String url;
     private List<String> keywords;
     private String description;
@@ -36,4 +38,12 @@ public class WebSite {
     private String footer;
     private String logo;
     private String favicon;
+
+
+    public void setCdn(String cdn) {
+        if (StringUtils.isEmptyOrWhitespace(cdn)) {
+            cdn = "";
+        }
+        this.cdn = cdn;
+    }
 }

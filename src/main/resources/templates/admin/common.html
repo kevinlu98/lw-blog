@@ -5,14 +5,14 @@
     <title th:replace="${title}">Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="/static/plugin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/bootstrap/css/bootstrap.min.css'}">
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="/static/plugin/bootstrap-table/bootstrap-table.min.css">
-    <link rel="stylesheet" href="/static/plugin/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/bootstrap-table/bootstrap-table.min.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/font-awesome/css/font-awesome.min.css'}">
 
     <th:block th:replace="${link}"></th:block>
     <!-- 自定义css文件 -->
-    <link rel="stylesheet" href="/static/admin/css/style.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/admin/css/style.css'}">
 
     <th:block th:replace="${style}"></th:block>
 </head>
@@ -54,6 +54,7 @@
 </th:block>
 
 <th:block th:fragment="footer">
+    <input type="hidden" id="lw-cdn-prefix" th:value="${@webSite.cdn}" >
     <footer>
         <div class="container lw-footer">
 
@@ -67,13 +68,13 @@
             <p>如果您有什么好的意见或建议请发邮件至 <a href="#">kevinlu98@qq.com</a></p>
         </div>
     </footer>
-    <script src="/static/plugin/jquery/jquery-3.5.1.min.js"></script>
-    <script src="/static/plugin/jquery/jquery.form.js"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/jquery/jquery-3.5.1.min.js'}"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/jquery/jquery.form.js'}"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="/static/plugin/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/plugin/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="/static/plugin/bootstrap-table/bootstrap-table-zh-CN.js"></script>
-    <script src="/static/plugin/layer/layer.js"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/bootstrap/js/bootstrap.min.js'}"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/bootstrap-table/bootstrap-table.min.js'}"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/bootstrap-table/bootstrap-table-zh-CN.js'}"></script>
+    <script th:src="${@webSite.cdn + '/static/plugin/layer/layer.js'}"></script>
 </th:block>
 
 </body>

@@ -2,8 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="admin/common::header(~{::title},~{::link},~{::style})">
     <title th:text="${pageTitle}"></title>
-    <link rel="stylesheet" href="/static/plugin/editormd/css/editormd.min.css">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/editormd/css/editormd.min.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/plugin/APlayer/APlayer.min.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/css/detail.css'}">
+    <link rel="stylesheet" th:href="${@webSite.cdn + '/static/css/markdown.extend.css'}">
     <style>
+        .editormd-emoji-dialog-box .editormd-tab-head li:last-child {
+            display: none;
+        }
+
+        .fcolorpicker {
+            z-index: 198910151 !important;
+        }
+
+        .fcolorpicker .current-color-value input {
+            padding: 0;
+        }
+
+        .fw-layer-content {
+            padding: 0 20px;
+        }
+
+        .fw-layer-content .fw-form-item {
+            margin: 10px 0;
+            color: #777;
+            font-size: 12px;
+        }
+
         #lw-select-tags {
             background-color: #fff;
             padding: 5px;
@@ -101,7 +126,8 @@
                     <label>分类</label>
                     <div class="radio" th:each="category:${categories}">
                         <label>
-                            <input th:checked="${article.category != null and article.category.id eq category.id}" required name="cid" type="radio"
+                            <input th:checked="${article.category != null and article.category.id eq category.id}"
+                                   required name="cid" type="radio"
                                    th:value="${category.id}">
                             <th:block th:text="${category.name}"></th:block>
                         </label>
@@ -152,7 +178,11 @@
     </div>
 </div>
 <th:block th:include="admin/common::footer"></th:block>
-<script src="/static/plugin/editormd/editormd.js"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/editormd/editormd.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/color/xncolorpicker.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/APlayer/APlayer.min.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/plugin/MetingJS/Meting.js'}"></script>
+<script th:src="${@webSite.cdn + '/static/admin/js/write.js'}"></script>
 <script>
     $(function () {
         // 选中标签
@@ -273,25 +303,6 @@
                 }
             })
             return false;
-        })
-
-        editormd('lw-markdown-content', {
-            height: 800,
-            emoji: true,
-            toolbarAutoFixed: false,
-            imageUpload: true,
-            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL: "/admin/md/upload",
-            path: '/static/plugin/editormd/lib/',
-            toolbarIcons: ["undo", "redo", "|", "bold", "del", "italic", "quote", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",
-                "list-ul", "list-ol", "hr", "|", "link", "image", "code", "code-block",
-                "table", "emoji", "search", "|", "watch", "preview", "fullscreen"],
-            onfullscreen: function () {
-                this.editor.css('z-index', 120)
-            },
-            onfullscreenExit: function () {
-                this.editor.css('z-index', 10)
-            }
         })
 
 
