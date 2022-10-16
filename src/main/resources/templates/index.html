@@ -39,7 +39,7 @@
 
 <div class="lw-container lw-main lw-posr">
     <div class="lw-left-list">
-        <div class="swiper mySwiper lw-swiper">
+        <div th:if="${banners.size() > 0}" class="swiper mySwiper lw-swiper">
             <div class="swiper-wrapper">
                 <div th:each="banner:${banners}" class="swiper-slide lw-posr">
                     <img th:src="${banner.cover}" alt="" srcset="">
