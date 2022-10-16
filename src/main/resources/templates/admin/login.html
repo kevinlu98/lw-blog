@@ -19,7 +19,7 @@
     <div class="lw-login-box">
       <div class="lw-left">
         <h1>欢迎登录</h1>
-        <p>冷文学习者-管理后台</p>
+        <p><th:block th:text="${@webSite.title}"></th:block>-管理后台</p>
       </div>
       <div class="lw-right">
         <div class="lw-error-msg" th:text="${errorMsg}" th:if="${errorMsg != null}"></div>

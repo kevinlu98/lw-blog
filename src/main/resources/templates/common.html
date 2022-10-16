@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" th:content="${@webSite.description}">
     <meta name="keywords" th:content="${T(java.lang.String).join(',',@webSite.keywords)}">
+    <link rel="icon" th:href="${@webSite.favicon}" type="image/x-icon">
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="/static/plugin/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/plugin/font-awesome/css/font-awesome.min.css">

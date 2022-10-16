@@ -74,7 +74,7 @@ website:
   # SEO描述信息
   description: 冷文学习者(KEVINLU98.COM)，记录一个北漂小码农的日常业余生活
   # 站长头像
-  avatar: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/ad0278954bd84793b809913c3ded4592.jpg
+  avatar: /static/image/avatar/1.png
   # 站长昵称
   nickname: Mr丶冷文
   # 管理页用户名
@@ -83,6 +83,8 @@ website:
   password: 7fef6171469e80d32c0559f88b377245
   # 站长坐标
   address: 北京 昌平
+  # 站点favicon
+  favicon: /static/image/favicon.png
   # 站长标签
   tags:
     - java
@@ -102,8 +104,8 @@ website:
   sina: https://weibo.com/lengwenboke
   # 站长邮箱
   mail: kevinlu98@qq.com
-  # 网站LOGO
-  logo: https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2042/0ca438467dc2488a89766667a51a2793.png
+  # 网站LOGO 300 x 80
+  logo: /static/image/logo.png
   # 网站底部信息
   footer: '<p>冷文学习者 版权所有 Copyright © www.kevinlu98.cn All Rights Reserved.</p> <p><a target="_blank" href="https://beian.miit.gov.cn">陕ICP备19024566-1号</a>
 <a style="margin-left: 10px" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402012109"><img style="vertical-align: top;" src="https://imagebed-1252410096.cos.ap-nanjing.myqcloud.com/2046/d4ab98835b8842c88eededac6e7c9e35.png">京公网安备
