@@ -109,7 +109,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="lw-comment-box row lw-m0" id="lw-comment-box">
+            <div th:if="${article.allowComment eq T(cn.kevinlu98.pojo.Article).COMMENT_ENABLE}" class="lw-comment-box row lw-m0" id="lw-comment-box">
                 <h2>评论(
                     <th:block th:text="${article.commentCount}"></th:block>
                     )
@@ -137,9 +137,10 @@
                     </div>
                 </form>
             </div>
+            <div style="padding: 15px;background-color:#fff;text-align: center" th:if="${article.allowComment eq T(cn.kevinlu98.pojo.Article).COMMENT_DISABLE}">对不起，当前文章站长设置了不允许评论</div>
         </div>
 
-        <div id="lw-comment-list">
+        <div th:if="${article.allowComment eq T(cn.kevinlu98.pojo.Article).COMMENT_ENABLE}" id="lw-comment-list">
             <th:block th:fragment="comments">
                 <div class="lw-comment-list">
                     <ul>
