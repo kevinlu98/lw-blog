@@ -121,7 +121,13 @@
                         return value ? '已读' : '未读'
                     }
                 },
-
+                {
+                    title: '文章',
+                    field: 'article',
+                    formatter:function (value) {
+                        return `<a href="/${value.id}.html" target="_blank">${value.title}</a>`
+                    }
+                },
                 {
                     title: '评论创建时间',
                     field: 'created'
