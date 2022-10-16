@@ -1,9 +1,9 @@
 package cn.kevinlu98.config;
 
 import cn.kevinlu98.common.LRUCache;
+import cn.kevinlu98.common.WebSite;
 import cn.kevinlu98.intercepto.LoginInterceptor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Author: Mr丶冷文
@@ -30,9 +31,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${upload.base-dir}")
     private String baseDir;
 
+    private final WebSite webSite;
+
     private final LoginInterceptor loginInterceptor;
 
-    public WebConfig(LoginInterceptor loginInterceptor) {
+    public WebConfig(WebSite webSite, LoginInterceptor loginInterceptor) {
+        this.webSite = webSite;
         this.loginInterceptor = loginInterceptor;
     }
 
@@ -51,14 +55,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/upload/**").addResourceLocations("file://" + absolutePath);
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(loginInterceptor)
-//                .addPathPatterns("/admin/**")
-//                .excludePathPatterns("/admin/login")
-//                .excludePathPatterns("/admin/login.html")
-//                .excludePathPatterns("/admin/logout");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        if (!webSite.isDebug()) {
+            registry.addInterceptor(loginInterceptor).addPathPatterns("/admin/**").excludePathPatterns("/admin/login").excludePathPatterns("/admin/login.html").excludePathPatterns("/admin/logout");
+        }
+    }
 
     @Bean
     public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
